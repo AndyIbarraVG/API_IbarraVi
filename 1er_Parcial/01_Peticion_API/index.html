@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Fetch Example</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button id="fetchButton">Fetch con Promesas</button>
+    <button id="fetchAsyncButton">Fetch con async/await</button>
+    <button id="xmlHttpRequestButton">XMLHttpRequest</button>
+    <button id="jqueryButton">jQuery</button>
+    <button id="axiosButton">Axios</button>
+    <div id="outputDiv"></div>
+
+    <script>
+        const outputDiv = document.getElementById("outputDiv");
+
+        const displayChampionInfo = (championData) => {
+            const championInfo = `
+                <h2>${championData.name} - ${championData.title}</h2>
+                <img src="https://ddragon.leagueoflegends.com/cdn/13.16.1/img/champion/${championData.image.full}" alt="${championData.name} Image" />
+                <h3>Habilidades:</h3>
+                <ul>
+                    ${championData.spells.map(spell => `<li>${spell.name}</li>` ).join("")}
+                </ul>
+                <h3>Pasiva:</h3>
+                <p>${championData.passive.name}</p>
+                <p>${championData.passive.description}</p>
+            `;
+
+            outputDiv.innerHTML = championInfo;
+        };
+
+        const fetchDataWithPromises = () => {
+            fetch("https://ddragon.leagueoflegends.com/cdn/13.16.1/data/es_ES/champion/KSante.json")
+                .then(response => response.json())
+                .then(data => {
+                    const championData = data.data.KSante;
+                    displayChampionInfo(championData);
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+        };
+
+        const fetchDataWithAsyncAwait = async () => {
+            try {
+                const response = await fetch("https://ddragon.leagueoflegends.com/cdn/13.16.1/data/es_ES/champion/Illaoi.json");
+                const data = await response.json();
+                const championData = data.data.Illaoi;
+                displayChampionInfo(championData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        const fetchDataWithXMLHttpRequest = () => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "https://ddragon.leagueoflegends.com/cdn/13.16.1/data/es_ES/champion/MasterYi.json", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    const championData = data.data.MasterYi;
+                    displayChampionInfo(championData);
+                }
+            };
+            xhr.send();
+        };
+
+        const fetchDataWithJQuery = () => {
+            $.get("https://ddragon.leagueoflegends.com/cdn/13.16.1/data/es_ES/champion/Xerath.json", function (data) {
+                const championData = data.data.Xerath;
+                displayChampionInfo(championData);
+            });
+        };
+
+        const fetchDataWithAxios = async () => {
+            try {
+                const response = await axios.get("https://ddragon.leagueoflegends.com/cdn/13.16.1/data/es_ES/champion/Jayce.json");
+                const championData = response.data.data.Jayce;
+                displayChampionInfo(championData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        document.getElementById("fetchButton").addEventListener("click", fetchDataWithPromises);
+        document.getElementById("fetchAsyncButton").addEventListener("click", fetchDataWithAsyncAwait);
+        document.getElementById("xmlHttpRequestButton").addEventListener("click", fetchDataWithXMLHttpRequest);
+        document.getElementById("jqueryButton").addEventListener("click", fetchDataWithJQuery);
+        document.getElementById("axiosButton").addEventListener("click", fetchDataWithAxios);
+    </script>
+
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Axios library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>
