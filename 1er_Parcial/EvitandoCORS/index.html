@@ -6,13 +6,18 @@
     <title>Document</title>
 </head>
 <body>
-    <button id="btn">Peticion</button>
+    <form target="resultado" method="get" action="http://localhost:8080/alumnos/sistemas">
+        <button id="btn">PeticionFetch</button>
+        <button type="submit" id="btn">PeticionSubmit</button>
+    </form><br>
+    
 
+    <iframe name="resultado"></iframe>
     <script>
         document.getElementById('btn').addEventListener('click', () => {
             fetch('http://localhost:8080/alumnos')
                 .then(res => res.json())
-                .then(data => console.log(data))
+                .then(data => console.lod(data))
         })
     </script>
 </body>
