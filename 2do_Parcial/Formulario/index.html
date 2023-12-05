@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Crear un formulario con formdata en javascript -->
+    <form action="recibir.php" method="post" enctype="multipart/form-data">
+        <input type="text" name="nombre" placeholder="Nombre:">
+        <br>
+        <input type="text" name="apellido" placeholder="Apellido:">
+        <br>
+        <input type="email" name="email" placeholder="Email:">
+        <br>
+        <input type="submit" value="Enviar">
+    </form>
+
+    <script>
+        let formulario = document.querySelector("form");
+        formulario.addEventListener("submit", function(e){
+            e.preventDefault();
+            let datos = new FormData(formulario);
+            console.log(datos.get("nombre"));
+            console.log(datos.get("apellido"));
+            console.log(datos.get("archivo"));
+            fetch("recibir.php", {
+                method: "POST",
+                body: datos
+            })
+            .then(function(response){
+                return response.text();
+            })
+            .then(function(texto){
+                console.log(texto);
+            })
+        })
+    </script>
+</body>
+</html>
